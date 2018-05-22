@@ -40,19 +40,44 @@ oc new-app --template=wfswarm-istio-circuit-breaker-name-service -p SOURCE_REPOS
 
 ### Without Istio Configuration
 
-### With Istio Configuration
-
-### Istio Circuit Breaker Configuration
-
-### Istio Fault Injection
-
-
-
-
 1. Retrieve the URL for the Istio Ingress route, with the below command, and open it in a web browser.
     ```
     echo http://$(oc get route istio-ingress -o jsonpath='{.spec.host}{"\n"}' -n istio-system)/
     ```
 2. The user will be presented with the web page of the Booster
-3. Click the "Invoke" button. You should see a "cute" hello message appear in the result box.
-4. Follow the instructions in the webpage to access the Jaeger UI to view the application traces.
+3. Click "Start" to issue repeating concurrent requests in batches of 10 to the greeting service
+4. Click "Stop" to cease issuing more requests
+5. The number of concurrent requests can be set to anything between 1 and 20
+6. There should be no failures and all calls are ok
+
+### With Istio Configuration
+
+#### Initial Setup
+
+1. Run `oc project <project>` to connect to the project created by the Launcher, or one you created in a previous step
+2. Create a `RouteRule` for the name service, which is required to use `DestinationPolicy` later
+    ````
+    oc create -f rules/route-rule.yml -n $(oc project -q)
+    ````
+3. Trying the application again you will notice no change from the current behavior
+
+#### Istio Circuit Breaker Configuration
+
+1. Apply a `DestinationPolicy` that activates Istio's Circuit Breaker on the name service,
+configuring it to allow a maximum of 100 concurrent connections
+    ````
+    oc create -f rules/initial-destination-policy.yml -n $(oc project -q)
+    ````
+2. Trying the application again you should see no change,
+as we're only able to make up to 20 concurrent connections which is not enough to trigger the circuit breaker.
+3. Remove the initial destination policy
+    ````
+    oc delete -f rules/initial-destination-policy.yml
+    ````
+4. Apply a more restrictive destination policy
+    ````
+    oc create -f rules/restrictive-destination-policy.yml -n $(oc project -q)
+    ````
+5. Trying the application again you can see about a third of all requests are triggering the fallback response because the circuit is open
+6. If we check "Simulate load", which adds a delay into how quickly the name service responds, and click "Start".
+We now see that the majority of our calls trigger the fallback as our name service takes too long to respond.
