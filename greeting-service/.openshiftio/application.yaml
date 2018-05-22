@@ -169,15 +169,21 @@ objects:
       name: http
     selector:
       app: wfswarm-istio-circuit-breaker-greeting
-- apiVersion: v1
-  kind: Route
+- apiVersion: extensions/v1beta1
+  kind: Ingress
   metadata:
-    labels:
-      app: wfswarm-istio-circuit-breaker-greeting
-    name: wfswarm-istio-circuit-breaker-greeting
+    name: wfswarm-istio-circuit-breaker-gateway
+    annotations:
+      kubernetes.io/ingress.class: "istio"
   spec:
-    port:
-      targetPort: 8080
-    to:
-      kind: Service
-      name: wfswarm-istio-circuit-breaker-greeting
+    rules:
+    - http:
+        paths:
+        - path: /.*
+          backend:
+            serviceName: wfswarm-istio-circuit-breaker-greeting
+            servicePort: 8080
+        - path: /api/greeting
+          backend:
+            serviceName: wfswarm-istio-circuit-breaker-greeting
+            servicePort: 8080

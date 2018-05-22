@@ -9,7 +9,7 @@ onmessage = function (e) {
         }
     };
 
-    var delay =  e.data.delay ? "&delay=150" : "";
+    var delay =  e.data.delay ? "&delay=1000" : "";
 
     xhr.open('GET', '/api/greeting?from=' + e.data.from + delay);
     xhr.send();
