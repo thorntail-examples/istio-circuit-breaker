@@ -47,6 +47,7 @@ public class NameResource {
             }
 
             final long round = Math.round((Math.random() * 200) + processingDelay);
+            System.out.println("Processing thread sleep of: " + round);
             Thread.sleep(round);
         }
 
