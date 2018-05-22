@@ -24,6 +24,81 @@
         href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
         integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
         crossorigin="anonymous">
+
+  <style>
+        ul {
+            list-style-type: none;
+        }
+        li {
+            display: block;
+        }
+        .from0 {
+            background-color: #eeeeee;
+        }
+        .from1 {
+            background-color: #eeffee;
+        }
+        .from2 {
+            background-color: #eeeeff;
+        }
+        .from3 {
+            background-color: #ffeeee;
+        }
+        .from4 {
+            background-color: #dddddd;
+        }
+        .from5 {
+            background-color: #ddffdd;
+        }
+        .from6 {
+            background-color: #ddddff;
+        }
+        .from7 {
+            background-color: #ffdddd;
+        }
+        .from8 {
+            background-color: #cccccc;
+        }
+        .from9 {
+            background-color: #ccffcc;
+        }
+        .from10 {
+            background-color: #ccccff;
+        }
+        .from11 {
+            background-color: #ffcccc;
+        }
+        .from12 {
+            background-color: #bbbbbb;
+        }
+        .from13 {
+            background-color: #bbffbb;
+        }
+        .from14 {
+            background-color: #bbbbff;
+        }
+        .from15 {
+            background-color: #ffbbbb;
+        }
+        .from16 {
+            background-color: #aaaaaa;
+        }
+        .from17 {
+            background-color: #aaffaa;
+        }
+        .from18 {
+            background-color: #ffaaff;
+        }
+        .from19 {
+            background-color: #999999;
+        }
+        .fallback {
+            background-color: coral;
+        }
+        div.label {
+            padding: 0.7em 0.2em;
+        }
+    </style>
 </head>
 
 <body>
@@ -55,13 +130,17 @@
     <div class="row">
 
       <div class="col-md-6">
-        <h2>Greeting service</h2>
+        <div class="row">
+          <h2>Greeting service</h2>
+        </div>
 
         <div class="row">
-          <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">#</span>
-            <input type="number" class="form-control" id="max-concurrent" value="10" min="1" max="20"
-                   placeholder="Max concurrent requests" aria-describedby="basic-addon1"/>
+          <div class="col-md-3">
+            <div class="input-group">
+              <span class="input-group-addon" id="basic-addon1">#</span>
+              <input type="number" class="form-control" id="max-concurrent" value="10" min="1" max="20"
+                     placeholder="Max concurrent requests" aria-describedby="basic-addon1"/>
+            </div>
           </div>
 
           <div class="col-md-3">
@@ -127,12 +206,6 @@
           $('#max-concurrent').val(20);
         }
 
-        // reset stats
-        callsOK = 0;
-        callsFailed = 0;
-        $("#callsOK").text(callsOK);
-        $("#callsFailed").text(callsFailed);
-        $("#ratio").text(0);
         workers = [];
 
         // check whether we want random processing delay
@@ -182,6 +255,14 @@
 
       $("#clear").click(function(e) {
         $("#greeting-result").html("");
+
+        // reset stats
+        callsOK = 0;
+        callsFailed = 0;
+        $("#callsOK").text(callsOK);
+        $("#callsFailed").text(callsFailed);
+        $("#ratio").text(0);
+
         e.preventDefault();
       });
     });
