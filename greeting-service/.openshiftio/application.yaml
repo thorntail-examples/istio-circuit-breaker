@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: wfswarm-istio-circuit-breaker-greeting-service
+  name: thorntail-istio-circuit-breaker-greeting-service
   annotations:
     iconClass: icon-jboss
-    tags: wildfly-swarm, circuit breaker, java, microservice
+    tags: thorntail, circuit breaker, java, microservice
     template.openshift.io/provider-display-name: "Red Hat, Inc."
     description: The Istio Circuit Breaker Mission shows circuit breaking on Istio
 parameters:
@@ -25,7 +25,7 @@ parameters:
 - name: ARTIFACT_COPY_ARGS
   description: Syntax to be used to copy uberjar files to the target directory
   displayName: Copy Args
-  value: '*-swarm.jar'
+  value: '*-thorntail.jar'
   required: true
 - name: GITHUB_WEBHOOK_SECRET
   description: A secret string used to configure the GitHub webhook.
@@ -41,12 +41,12 @@ objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: wfswarm-istio-circuit-breaker-greeting
+    name: thorntail-istio-circuit-breaker-greeting
   spec: {}
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: runtime-wfswarm-istio-circuit-breaker-greeting
+    name: runtime-thorntail-istio-circuit-breaker-greeting
   spec:
     tags:
     - name: latest
@@ -56,12 +56,12 @@ objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    name: wfswarm-istio-circuit-breaker-greeting
+    name: thorntail-istio-circuit-breaker-greeting
   spec:
     output:
       to:
         kind: ImageStreamTag
-        name: wfswarm-istio-circuit-breaker-greeting:latest
+        name: thorntail-istio-circuit-breaker-greeting:latest
     postCommit: {}
     resources: {}
     source:
@@ -73,7 +73,7 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          name: runtime-wfswarm-istio-circuit-breaker-greeting:latest
+          name: runtime-thorntail-istio-circuit-breaker-greeting:latest
         incremental: true
         env:
         - name: MAVEN_ARGS_APPEND
@@ -98,8 +98,8 @@ objects:
   kind: DeploymentConfig
   metadata:
     labels:
-      app: wfswarm-istio-circuit-breaker-greeting
-    name: wfswarm-istio-circuit-breaker-greeting
+      app: thorntail-istio-circuit-breaker-greeting
+    name: thorntail-istio-circuit-breaker-greeting
   spec:
     replicas: 1
     revisionHistoryLimit: 2
@@ -112,7 +112,7 @@ objects:
         annotations:
           sidecar.istio.io/inject: "true"
         labels:
-          app: wfswarm-istio-circuit-breaker-greeting
+          app: thorntail-istio-circuit-breaker-greeting
       spec:
         containers:
         - env:
@@ -120,7 +120,7 @@ objects:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
-          image: wfswarm-istio-circuit-breaker-greeting:latest
+          image: thorntail-istio-circuit-breaker-greeting:latest
           imagePullPolicy: IfNotPresent
           livenessProbe:
             exec:
@@ -128,7 +128,7 @@ objects:
               - curl
               - http://localhost:8080/health
             initialDelaySeconds: 180
-          name: wildfly-swarm
+          name: thorntail
           ports:
           - containerPort: 8080
             name: http
@@ -152,38 +152,56 @@ objects:
     - imageChangeParams:
         automatic: true
         containerNames:
-        - wildfly-swarm
+        - thorntail
         from:
           kind: ImageStreamTag
-          name: wfswarm-istio-circuit-breaker-greeting:latest
+          name: thorntail-istio-circuit-breaker-greeting:latest
       type: ImageChange
 - apiVersion: v1
   kind: Service
   metadata:
-    name: wfswarm-istio-circuit-breaker-greeting
+    name: thorntail-istio-circuit-breaker-greeting
     labels:
-      app: wfswarm-istio-circuit-breaker-greeting
+      app: thorntail-istio-circuit-breaker-greeting
   spec:
     ports:
     - port: 8080
       name: http
     selector:
-      app: wfswarm-istio-circuit-breaker-greeting
-- apiVersion: extensions/v1beta1
-  kind: Ingress
+      app: thorntail-istio-circuit-breaker-greeting
+- apiVersion: networking.istio.io/v1alpha3
+  kind: Gateway
   metadata:
-    name: wfswarm-istio-circuit-breaker-gateway
-    annotations:
-      kubernetes.io/ingress.class: "istio"
+    name: thorntail-istio-circuit-breaker-gateway
   spec:
-    rules:
-    - http:
-        paths:
-        - path: /.*
-          backend:
-            serviceName: wfswarm-istio-circuit-breaker-greeting
-            servicePort: 8080
-        - path: /api/greeting
-          backend:
-            serviceName: wfswarm-istio-circuit-breaker-greeting
-            servicePort: 8080
+    selector:
+      istio: ingressgateway # use istio default controller
+    servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+      - "*"
+- apiVersion: networking.istio.io/v1alpha3
+  kind: VirtualService
+  metadata:
+    name: thorntail-istio-circuit-breaker-greeting
+  spec:
+    hosts:
+    - "*"
+    gateways:
+    - thorntail-istio-circuit-breaker-gateway
+    http:
+    - match:
+      - uri:
+          prefix: /thorntail-istio-circuit-breaker/
+      - uri:
+          prefix: /thorntail-istio-circuit-breaker
+      rewrite:
+        uri: /
+      route:
+      - destination:
+          host: thorntail-istio-circuit-breaker-greeting
+          port:
+            number: 8080

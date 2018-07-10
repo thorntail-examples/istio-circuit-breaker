@@ -1,8 +1,8 @@
-# Istio Circuit Breaker Mission for WildFly Swarm
+# Istio Circuit Breaker Mission for Thorntail
 
 ## Purpose
 
-Showcase Circuit Breaking in Istio in WildFly Swarm applications
+Showcase Circuit Breaking in Istio in Thorntail applications
 
 ## Prerequisites
 
@@ -32,17 +32,17 @@ Run the following commands to apply and execute the OpenShift templates that wil
 ```bash
 find . | grep openshiftio | grep application | xargs -n 1 oc apply -f
 
-oc new-app --template=wfswarm-istio-circuit-breaker-greeting-service -p SOURCE_REPOSITORY_URL=https://github.com/wildfly-swarm-openshiftio-boosters/wfswarm-istio-circuit-breaker -p SOURCE_REPOSITORY_REF=master -p SOURCE_REPOSITORY_DIR=greeting-service
-oc new-app --template=wfswarm-istio-circuit-breaker-name-service -p SOURCE_REPOSITORY_URL=https://github.com/wildfly-swarm-openshiftio-boosters/wfswarm-istio-circuit-breaker -p SOURCE_REPOSITORY_REF=master -p SOURCE_REPOSITORY_DIR=name-service
+oc new-app --template=thorntail-istio-circuit-breaker-greeting-service -p SOURCE_REPOSITORY_URL=https://github.com/wildfly-swarm-openshiftio-boosters/wfswarm-istio-circuit-breaker -p SOURCE_REPOSITORY_REF=master -p SOURCE_REPOSITORY_DIR=greeting-service
+oc new-app --template=thorntail-istio-circuit-breaker-name-service -p SOURCE_REPOSITORY_URL=https://github.com/wildfly-swarm-openshiftio-boosters/wfswarm-istio-circuit-breaker -p SOURCE_REPOSITORY_REF=master -p SOURCE_REPOSITORY_DIR=name-service
 ```
 
 ## Use Cases
 
 ### Without Istio Configuration
 
-1. Retrieve the URL for the Istio Ingress route, with the below command, and open it in a web browser.
+1. Retrieve the URL for the Istio Ingress Gateway route, with the below command, and open it in a web browser.
     ```
-    echo http://$(oc get route istio-ingress -o jsonpath='{.spec.host}{"\n"}' -n istio-system)/
+    echo http://$(oc get route istio-ingressgateway -o jsonpath='{.spec.host}{"\n"}' -n istio-system)/thorntail-istio-circuit-breaking/
     ```
 2. The user will be presented with the web page of the Booster
 3. Click "Start" to issue repeating concurrent requests in batches of 10 to the greeting service
@@ -55,28 +55,28 @@ oc new-app --template=wfswarm-istio-circuit-breaker-name-service -p SOURCE_REPOS
 #### Initial Setup
 
 1. Run `oc project <project>` to connect to the project created by the Launcher, or one you created in a previous step
-2. Create a `RouteRule` for the name service, which is required to use `DestinationPolicy` later
+2. Create a `VirtualService` for the name service, which is required to use `DestinationRule` later
     ````
-    oc create -f rules/route-rule.yml -n $(oc project -q)
+    oc create -f rules/virtual-service.yml -n $(oc project -q)
     ````
 3. Trying the application again you will notice no change from the current behavior
 
 #### Istio Circuit Breaker Configuration
 
-1. Apply a `DestinationPolicy` that activates Istio's Circuit Breaker on the name service,
+1. Apply a `DestinationRule` that activates Istio's Circuit Breaker on the name service,
 configuring it to allow a maximum of 100 concurrent connections
     ````
-    oc create -f rules/initial-destination-policy.yml -n $(oc project -q)
+    oc create -f rules/initial-destination-rule.yml -n $(oc project -q)
     ````
 2. Trying the application again you should see no change,
 as we're only able to make up to 20 concurrent connections which is not enough to trigger the circuit breaker.
-3. Remove the initial destination policy
+3. Remove the initial destination rule
     ````
-    oc delete -f rules/initial-destination-policy.yml
+    oc delete -f rules/initial-destination-rule.yml
     ````
-4. Apply a more restrictive destination policy
+4. Apply a more restrictive destination rule
     ````
-    oc create -f rules/restrictive-destination-policy.yml -n $(oc project -q)
+    oc create -f rules/restrictive-destination-rule.yml -n $(oc project -q)
     ````
 5. Trying the application again you can see about a third of all requests are triggering the fallback response because the circuit is open
 6. If we check "Simulate load", which adds a delay into how quickly the name service responds, and click "Start".

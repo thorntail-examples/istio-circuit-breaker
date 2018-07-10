@@ -34,7 +34,7 @@ import org.apache.http.HttpStatus;
 @Path("/")
 public class GreetingResource {
 
-    private static final String NAME_SERVICE_URL = "http://wfswarm-istio-circuit-breaker-name:8080";
+    private static final String NAME_SERVICE_URL = "http://thorntail-istio-circuit-breaker-name:8080";
 
     @GET
     @Path("/greeting")
@@ -62,7 +62,7 @@ public class GreetingResource {
                     .build();
         } catch (Exception e) {
             return Response.serverError()
-                    .entity("Failed to communicate with `wfswarm-istio-tracing-name` due to: " + e.getMessage())
+                    .entity("Failed to communicate with `thorntail-istio-circuit-breaker-name` due to: " + e.getMessage())
                     .build();
         }
     }

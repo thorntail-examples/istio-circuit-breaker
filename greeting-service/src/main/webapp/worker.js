@@ -11,6 +11,11 @@ onmessage = function (e) {
 
     var delay =  e.data.delay ? "&delay=250" : "";
 
-    xhr.open('GET', '/api/greeting?from=' + e.data.from + delay);
+    var getUrl = "/api/greeting";
+    if (!window.location.href.endsWith("/")) {
+      getUrl = "thorntail-istio-circuit-breaking/" + getUrl;
+    }
+
+    xhr.open('GET', getUrl + '?from=' + e.data.from + delay);
     xhr.send();
 };
