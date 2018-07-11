@@ -235,7 +235,7 @@
           };
 
           worker.timer = setInterval(function (from) {
-            worker.postMessage({'from': from, 'delay': addDelay})
+            worker.postMessage({'from': from, 'delay': addDelay, 'href': window.location.href})
           }, ((Math.random() * i * 100) + 200), i);
           workers[i] = worker;
         }
