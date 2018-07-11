@@ -212,7 +212,7 @@
         var addDelay = $('#addDelay')[0].checked;
 
         for (var i = 0; i < workerNumber; i++) {
-          var worker = new Worker('thorntail-istio-circuit-breaker/worker.js');
+          var worker = new Worker('/worker.js');
 
           worker.onerror = function (e) {
             console.log(e)
