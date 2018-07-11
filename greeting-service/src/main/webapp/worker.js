@@ -13,7 +13,7 @@ onmessage = function (e) {
 
     var getUrl = "/api/greeting";
     if (!window.location.href.endsWith("/")) {
-      getUrl = "thorntail-istio-circuit-breaking/" + getUrl;
+      getUrl = "thorntail-istio-circuit-breaker/" + getUrl;
     }
 
     xhr.open('GET', getUrl + '?from=' + e.data.from + delay);

@@ -42,7 +42,7 @@ oc new-app --template=thorntail-istio-circuit-breaker-name-service -p SOURCE_REP
 
 1. Retrieve the URL for the Istio Ingress Gateway route, with the below command, and open it in a web browser.
     ```
-    echo http://$(oc get route istio-ingressgateway -o jsonpath='{.spec.host}{"\n"}' -n istio-system)/thorntail-istio-circuit-breaking/
+    echo http://$(oc get route istio-ingressgateway -o jsonpath='{.spec.host}{"\n"}' -n istio-system)/thorntail-istio-circuit-breaker/
     ```
 2. The user will be presented with the web page of the Booster
 3. Click "Start" to issue repeating concurrent requests in batches of 10 to the greeting service
