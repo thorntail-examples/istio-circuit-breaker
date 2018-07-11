@@ -5,9 +5,10 @@ metadata:
 spec:
   host: thorntail-istio-circuit-breaker-name
   trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
     connectionPool:
       tcp:
         maxConnections: 100
       http:
         http1MaxPendingRequests: 10
-        http2MaxRequests: 10
