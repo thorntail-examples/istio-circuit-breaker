@@ -38,6 +38,8 @@ oc new-app --template=thorntail-istio-circuit-breaker-name-service -p SOURCE_REP
 
 ## Use Cases
 
+> NOTE: If project created through Launcher, ensure you're logged into the project with `oc project <project-name>` before continuing.
+
 ### Without Istio Configuration
 
 1. Create a Gateway and Virtual Service in Istio so that we can access the service within the Mesh:
