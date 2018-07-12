@@ -38,7 +38,7 @@ oc new-app --template=thorntail-istio-circuit-breaker-name-service -p SOURCE_REP
 
 ## Use Cases
 
-> NOTE: If project created through Launcher, ensure you're logged into the project with `oc project <project-name>` before continuing.
+Any steps issuing `oc` commands require the user to have run `oc login` first and switched to the appropriate project with `oc project <project name>`.
 
 ### Without Istio Configuration
 
