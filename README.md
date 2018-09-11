@@ -7,7 +7,7 @@ Showcase Circuit Breaking in Istio in Thorntail applications
 ## Prerequisites
 
 * Docker installed and running
-* OpenShift and Istio environment up and running (See https://github.com/openshift-istio/istio-docs/blob/master/user-journey.adoc for details)
+* OpenShift and Istio environment up and running (See https://github.com/openshift-istio/istio-docs/blob/master/content/rhoar-workflow.adoc for details)
 
 ## Launcher Flow Setup
 
