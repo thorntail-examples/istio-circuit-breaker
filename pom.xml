@@ -17,7 +17,7 @@
   <name>Thorntail - Istio - Circuit Breaker Booster</name>
 
   <properties>
-    <version.thorntail>2.2.0.Final</version.thorntail>
+    <version.thorntail>2.2.0.Final-redhat-00021</version.thorntail>
     <version.resteasy>3.0.24.Final</version.resteasy>
   </properties>
 
