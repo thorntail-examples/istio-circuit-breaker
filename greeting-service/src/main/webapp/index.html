@@ -198,6 +198,8 @@
       }
 
       $("#invoke").click(function (e) {
+        // disable button to avoid creating multiple sets of workers
+        this.disabled = true;
         var workerNumber = Number.parseInt($('#max-concurrent').val());
 
         // limit workers to 20
@@ -250,6 +252,7 @@
           }
           workers = undefined;
         }
+        $('#invoke').prop('disabled', false);
         e.preventDefault();
       });
 
