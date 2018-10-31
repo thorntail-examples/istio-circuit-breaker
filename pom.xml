@@ -18,7 +18,7 @@
 
   <properties>
     <version.thorntail>2.2.1.Final</version.thorntail>
-    <version.resteasy>3.0.24.Final</version.resteasy>
+    <version.resteasy>3.6.1.Final-redhat-00001</version.resteasy>
   </properties>
 
   <modules>
