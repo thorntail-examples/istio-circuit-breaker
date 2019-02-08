@@ -12,10 +12,7 @@ onmessage = function (e) {
     var delay =  e.data.delay ? "&delay=250" : "";
 
     var getUrl = "api/greeting";
-    if (!e.data.href.endsWith("/")) {
-      getUrl = "thorntail-istio-circuit-breaker/" + getUrl;
-    }
-
+    
     xhr.open('GET', getUrl + '?from=' + e.data.from + delay);
     xhr.send();
 };

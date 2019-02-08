@@ -214,7 +214,13 @@
         var addDelay = $('#addDelay')[0].checked;
 
         for (var i = 0; i < workerNumber; i++) {
-          var worker = new Worker('worker.js');
+          var workerScriptUrl = "worker.js";
+          
+          var href = $(location).attr('href'); 
+          if (!href.endsWith("/")) {
+              workerScriptUrl = "thorntail-istio-circuit-breaker/" + workerScriptUrl;
+          }
+          var worker = new Worker(workerScriptUrl);
 
           worker.onerror = function (e) {
             console.log(e)
