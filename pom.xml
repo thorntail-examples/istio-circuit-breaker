@@ -11,7 +11,7 @@
 
   <groupId>io.openshift.booster</groupId>
   <artifactId>thorntail-istio-circuit-breaker-parent</artifactId>
-  <version>5-SNAPSHOT</version>
+  <version>5</version>
   <packaging>pom</packaging>
 
   <name>Thorntail - Istio - Circuit Breaker Booster</name>
