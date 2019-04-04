@@ -21,8 +21,8 @@ chmod +x oc
 export PATH=/path/to/istiooc:$PATH
 ```
 
-Note in this case it is based on Maistra 0.7.0 openshift-ansible release:
-https://github.com/Maistra/openshift-ansible/releases/tag/maistra-0.7.0
+Note in this case it is based on Maistra 0.9.0 openshift-ansible release:
+https://github.com/Maistra/openshift-ansible/releases/tag/maistra-0.9.0
 
 - Start the cluster:
 ```
@@ -30,7 +30,7 @@ oc cluster up
 ```
 
 Note this will apply the the istio-operator described here:
-https://github.com/Maistra/openshift-ansible/blob/maistra-0.7.0/istio/Installation.md#installing-the-istio-operator
+https://github.com/Maistra/openshift-ansible/blob/maistra-0.9.0/istio/Installation.md#installing-the-istio-operator
 
 - Login as system:admin, create an admin user and relogin as admin:admin
 ```
@@ -49,10 +49,10 @@ oc adm policy add-scc-to-user privileged system:serviceaccount:myproject:default
 - Deploy the Istio control plane and the Fabric8 launcher:
 
 ```
-oc create -f cr-full.yaml
+oc create -f istio-installation-full.yaml
 ```
 
-where `cr-full.yaml` should look like this:
+where `istio-installation-full.yaml` should look like this:
 
 ```
 apiVersion: "istio.openshift.com/v1alpha1"
@@ -66,10 +66,10 @@ spec:
     authentication: true
     community: false
     prefix: registry.access.redhat.com/openshift-istio-tech-preview/ 
-    version: 0.7.0
+    version: 0.9.0
   jaeger:
     prefix: registry.access.redhat.com/distributed-tracing-tech-preview/
-    version: 1.9.0
+    version: 1.11.0
     elasticsearch_memory: 1Gi
   launcher:
     openshift:
@@ -83,13 +83,13 @@ spec:
 where the GIT token should have `public_repo`, `read:org`, and `admin:repo_hook` permissions. 
 
 The more complete version may look like this:
-https://github.com/Maistra/openshift-ansible/blob/maistra-0.7.0/istio/cr-full.yaml
+https://github.com/Maistra/openshift-ansible/blob/maistra-0.9.0/istio/istio-installation-full.yaml
 
 but the one above is sufficient for testing the boosters. Note, setting `istio.authentication` to `true` enables MTLS.
 
 - Verify the Istio Control Plane and Launcher deployments:
 
-https://github.com/Maistra/openshift-ansible/blob/maistra-0.7.0/istio/Installation.md#verifying-the-istio-control-plane
+https://github.com/Maistra/openshift-ansible/blob/maistra-0.9.0/istio/Installation.md#verifying-the-istio-control-plane
 
 Now proceed to testing the booster.
 
